@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Translation Editor | SVRM</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a class="logo" href="/" data-i18n="heroTitle">SVRM</a>
+        <nav class="nav-links">
+          <a href="/" data-home="true" data-i18n="navHome">Home</a>
+          <a href="/about.html" data-i18n="navAbout">About</a>
+          <a href="/jobs.html" data-i18n="navJobs">Jobs</a>
+          <a href="/services.html" data-i18n="navServices">Services</a>
+          <a href="/mental-health.html" data-i18n="navMentalHealth">Mental Health</a>
+          <a href="/blogs.html" data-i18n="navBlogs">Blogs</a>
+          <a href="/courses.html" data-i18n="navCourses">Courses</a>
+          <a href="/resources.html" data-i18n="navResources">Resources</a>
+          <a href="/admin.html" id="admin-link" class="hidden" data-i18n="navAdmin">Admin</a>
+        </nav>
+        <div class="actions">
+          <label for="language-select" class="hidden" data-i18n="languageLabel">Language</label>
+          <select id="language-select" aria-label="Language">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </select>
+          <button type="button" class="ghost" data-login-open data-i18n="login">Login</button>
+          <div class="user-menu hidden" data-user-menu>
+            <button type="button" class="ghost" data-user-menu-toggle>
+              <span data-user-label data-i18n="profile">Profile</span>
+              <span class="chevron" aria-hidden="true">▾</span>
+            </button>
+            <div class="user-dropdown">
+              <div class="user-info">
+                <span class="user-email" data-user-email></span>
+              </div>
+              <a href="/profile.html" data-i18n="profileSettings">Profile settings</a>
+              <button type="button" class="link" data-logout data-i18n="logout">Log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <h1 data-i18n="translationEditorTitle">Arabic Translation Corrections</h1>
+        <p data-i18n="translationEditorSubtitle">
+          Review each English label and adjust the Arabic translation, then save instantly.
+        </p>
+      </section>
+
+      <div id="translation-locked" class="notice hidden" data-i18n="adminLocked">
+        You must be logged in as an admin to access this page.
+      </div>
+
+      <section class="section admin-content" id="translation-editor">
+        <div class="translation-table-wrapper">
+          <table class="translation-table">
+            <thead>
+              <tr>
+                <th data-i18n="translationTableEnglish">English</th>
+                <th data-i18n="translationTableArabic">Arabic</th>
+                <th data-i18n="translationTableActions">Actions</th>
+              </tr>
+            </thead>
+            <tbody data-translation-rows></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p data-i18n="footerText">SVRM Directory</p>
+    </footer>
+
+    <div class="modal" id="login-modal" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <h2 data-i18n="loginTitle">Member Login</h2>
+        <form>
+          <div class="form-grid">
+            <label class="form-full">
+              <span data-i18n="loginEmail">Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label class="form-full">
+              <span data-i18n="loginPassword">Password</span>
+              <input type="password" name="password" required />
+            </label>
+          </div>
+          <p class="form-message" data-login-message></p>
+          <div class="form-actions">
+            <button type="submit" data-i18n="loginAction">Sign in</button>
+            <button type="button" class="secondary" data-login-close data-i18n="close">
+              Close
+            </button>
+          </div>
+          <p>
+            <span data-i18n="loginSignupPrompt">New to the website?</span>
+            <a href="/signup.html" data-i18n="loginSignupAction">Sign up now</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
