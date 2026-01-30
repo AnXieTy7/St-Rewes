@@ -40,6 +40,11 @@ const baseTranslations = {
     close: 'Close',
     loginSignupPrompt: 'New to the website?',
     loginSignupAction: 'Sign up now',
+    profile: 'Profile',
+    profileSettings: 'Profile settings',
+    logout: 'Log out',
+    loginErrorAdmin: 'Invalid admin credentials.',
+    loginErrorRequired: 'Please enter an email and password.',
     signupTitle: 'Create your SVRM account',
     signupSubtitle: 'Join the directory and connect with resources.',
     signupSubmit: 'Create account',
@@ -64,6 +69,11 @@ const baseTranslations = {
     sampleJobBody: 'Placeholder for a job listing.',
     sampleServiceBody: 'Placeholder for a service listing.',
     footerText: 'SVRM Directory',
+    profileTitle: 'Profile settings',
+    profileSubtitle: 'Manage your personal information and preferences.',
+    profileSave: 'Save changes',
+    profileLocked: 'Please log in to manage your profile.',
+    profileUpdated: 'Profile updated successfully.',
     adminTitle: 'Administration Console',
     adminSubtitle: 'Manage users, listings, and editorial content.',
     adminUsers: 'User Management',
@@ -131,6 +141,11 @@ const baseTranslations = {
     close: 'إغلاق',
     loginSignupPrompt: 'جديد على الموقع؟',
     loginSignupAction: 'سجّل الآن',
+    profile: 'الملف الشخصي',
+    profileSettings: 'إعدادات الملف الشخصي',
+    logout: 'تسجيل الخروج',
+    loginErrorAdmin: 'بيانات المسؤول غير صحيحة.',
+    loginErrorRequired: 'يرجى إدخال البريد الإلكتروني وكلمة المرور.',
     signupTitle: 'أنشئ حساب SVRM',
     signupSubtitle: 'انضم إلى الدليل وتواصل مع الموارد.',
     signupSubmit: 'إنشاء حساب',
@@ -155,6 +170,11 @@ const baseTranslations = {
     sampleJobBody: 'حقل تجريبي لإعلان وظيفة.',
     sampleServiceBody: 'حقل تجريبي لقائمة خدمة.',
     footerText: 'دليل SVRM',
+    profileTitle: 'إعدادات الملف الشخصي',
+    profileSubtitle: 'حدّث معلوماتك الشخصية وتفضيلاتك.',
+    profileSave: 'حفظ التغييرات',
+    profileLocked: 'يرجى تسجيل الدخول لإدارة ملفك الشخصي.',
+    profileUpdated: 'تم تحديث الملف الشخصي بنجاح.',
     adminTitle: 'لوحة الإدارة',
     adminSubtitle: 'إدارة المستخدمين والقوائم والمحتوى التحريري.',
     adminUsers: 'إدارة المستخدمين',
@@ -234,6 +254,67 @@ const stateList = [
   'Wisconsin',
   'Wyoming',
 ];
+
+const ADMIN_EMAIL = 'admin@admin.co';
+const ADMIN_PASSWORD = 'Admin123@';
+const PROFILE_STORAGE_KEY = 'svrm-profiles';
+
+const loadProfiles = () => {
+  const stored = localStorage.getItem(PROFILE_STORAGE_KEY);
+  if (!stored) {
+    return {};
+  }
+  try {
+    return JSON.parse(stored);
+  } catch (error) {
+    return {};
+  }
+};
+
+const saveProfiles = (profiles) => {
+  localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profiles));
+};
+
+const getProfile = (email) => {
+  if (!email) {
+    return null;
+  }
+  const profiles = loadProfiles();
+  return (
+    profiles[email] || {
+      email,
+      firstName: '',
+      lastName: '',
+      state: '',
+      profileInfo: '',
+      role: '',
+    }
+  );
+};
+
+const setProfile = (email, updates) => {
+  if (!email) {
+    return;
+  }
+  const profiles = loadProfiles();
+  profiles[email] = {
+    ...(profiles[email] || { email }),
+    ...updates,
+    email,
+  };
+  saveProfiles(profiles);
+};
+
+const moveProfile = (oldEmail, newEmail, updates) => {
+  if (!oldEmail || !newEmail) {
+    return;
+  }
+  const profiles = loadProfiles();
+  const existing = profiles[oldEmail] || { email: oldEmail };
+  delete profiles[oldEmail];
+  profiles[newEmail] = { ...existing, ...updates, email: newEmail };
+  saveProfiles(profiles);
+};
 
 const loadOverrides = () => {
   const stored = localStorage.getItem('svrm-translation-overrides');
@@ -327,8 +408,12 @@ const initLogin = () => {
   }
   const closeButton = modal.querySelector('[data-login-close]');
   const form = modal.querySelector('form');
+  const message = modal.querySelector('[data-login-message]');
 
   openButton.addEventListener('click', () => {
+    if (message) {
+      message.textContent = '';
+    }
     modal.classList.add('active');
   });
 
@@ -339,22 +424,108 @@ const initLogin = () => {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const formData = new FormData(form);
-    const email = formData.get('email');
-    const admin = String(email || '').toLowerCase().includes('admin');
-    localStorage.setItem('svrm-user', email || '');
-    localStorage.setItem('svrm-admin', admin ? 'true' : 'false');
+    const emailInput = String(formData.get('email') || '').trim();
+    const password = String(formData.get('password') || '').trim();
+    const selected = translations[getCurrentLang()] || translations.en;
+    if (message) {
+      message.textContent = '';
+    }
+
+    if (!emailInput || !password) {
+      if (message) {
+        message.textContent = selected.loginErrorRequired;
+      }
+      return;
+    }
+
+    const email = emailInput.toLowerCase();
+    const isAdminEmail = email === ADMIN_EMAIL;
+    if (isAdminEmail && password !== ADMIN_PASSWORD) {
+      if (message) {
+        message.textContent = selected.loginErrorAdmin;
+      }
+      return;
+    }
+
+    const isAdmin = isAdminEmail && password === ADMIN_PASSWORD;
+    localStorage.setItem('svrm-user', email);
+    localStorage.setItem('svrm-admin', isAdmin ? 'true' : 'false');
+    setProfile(email, {
+      email,
+      role: isAdmin ? 'Administrator' : 'Member',
+    });
     modal.classList.remove('active');
-    updateAdminLink();
+    updateAuthUI();
   });
 };
 
-const updateAdminLink = () => {
+const updateAuthUI = () => {
+  const email = localStorage.getItem('svrm-user');
+  const profile = getProfile(email);
   const adminLink = document.querySelector('#admin-link');
-  if (!adminLink) {
+  const isAdmin = localStorage.getItem('svrm-admin') === 'true';
+  if (adminLink) {
+    adminLink.classList.toggle('hidden', !isAdmin);
+  }
+
+  const userMenu = document.querySelector('[data-user-menu]');
+  if (userMenu) {
+    userMenu.classList.toggle('hidden', !email);
+  }
+
+  const loginButton = document.querySelector('[data-login-open]');
+  if (loginButton) {
+    loginButton.classList.toggle('hidden', Boolean(email));
+  }
+
+  const userEmail = document.querySelector('[data-user-email]');
+  if (userEmail) {
+    userEmail.textContent = profile?.email || '';
+  }
+};
+
+const initUserMenu = () => {
+  const menu = document.querySelector('[data-user-menu]');
+  if (!menu) {
     return;
   }
-  const isAdmin = localStorage.getItem('svrm-admin') === 'true';
-  adminLink.classList.toggle('hidden', !isAdmin);
+  const toggle = menu.querySelector('[data-user-menu-toggle]');
+  const logoutButtons = document.querySelectorAll('[data-logout]');
+
+  if (toggle) {
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      menu.classList.toggle('open');
+    });
+  }
+
+  document.addEventListener('click', () => {
+    menu.classList.remove('open');
+  });
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      localStorage.removeItem('svrm-user');
+      localStorage.removeItem('svrm-admin');
+      menu.classList.remove('open');
+      updateAuthUI();
+      if (window.location.pathname === '/profile.html') {
+        window.location.href = '/';
+      }
+    });
+  });
+};
+
+const fillStateOptions = (select) => {
+  if (!select || select.options.length > 1) {
+    return;
+  }
+  stateList.forEach((state) => {
+    const option = document.createElement('option');
+    option.value = state;
+    option.textContent = state;
+    select.appendChild(option);
+  });
 };
 
 const initSignupForm = () => {
@@ -364,13 +535,8 @@ const initSignupForm = () => {
   }
 
   const stateSelect = form.querySelector('#state');
-  if (stateSelect && stateSelect.options.length === 1) {
-    stateList.forEach((state) => {
-      const option = document.createElement('option');
-      option.value = state;
-      option.textContent = state;
-      stateSelect.appendChild(option);
-    });
+  if (stateSelect) {
+    fillStateOptions(stateSelect);
   }
 
   form.addEventListener('submit', async (event) => {
@@ -399,10 +565,78 @@ const initSignupForm = () => {
     if (response.ok) {
       message.textContent = result.message;
       message.classList.remove('notice');
+      if (payload.email) {
+        const email = String(payload.email).toLowerCase();
+        setProfile(email, {
+          email,
+          firstName: payload.firstName || '',
+          lastName: payload.lastName || '',
+          profileInfo: payload.profileInfo || '',
+          state: payload.state || '',
+          role: payload.role || '',
+        });
+      }
     } else {
       message.textContent = result.message || 'Unable to sign up right now.';
       message.classList.add('notice');
     }
+  });
+};
+
+const initProfileForm = () => {
+  const form = document.querySelector('#profile-form');
+  if (!form) {
+    return;
+  }
+  const lockedNotice = document.querySelector('#profile-locked');
+  const message = form.querySelector('[data-profile-message]');
+  const email = localStorage.getItem('svrm-user');
+
+  if (!email) {
+    form.classList.add('hidden');
+    if (lockedNotice) {
+      lockedNotice.classList.remove('hidden');
+    }
+    return;
+  }
+
+  const profile = getProfile(email);
+  if (lockedNotice) {
+    lockedNotice.classList.add('hidden');
+  }
+
+  const stateSelect = form.querySelector('[name="state"]');
+  if (stateSelect) {
+    fillStateOptions(stateSelect);
+  }
+
+  form.querySelector('[name=\"firstName\"]').value = profile?.firstName || '';
+  form.querySelector('[name=\"lastName\"]').value = profile?.lastName || '';
+  form.querySelector('[name=\"email\"]').value = profile?.email || email;
+  form.querySelector('[name=\"state\"]').value = profile?.state || '';
+  form.querySelector('[name=\"role\"]').value = profile?.role || '';
+  form.querySelector('[name=\"profileInfo\"]').value = profile?.profileInfo || '';
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const updates = Object.fromEntries(formData.entries());
+    const newEmail = String(updates.email || '').trim().toLowerCase();
+    if (!newEmail) {
+      return;
+    }
+    const storedEmail = email.toLowerCase();
+    if (newEmail !== storedEmail) {
+      moveProfile(storedEmail, newEmail, updates);
+      localStorage.setItem('svrm-user', newEmail);
+    } else {
+      setProfile(storedEmail, updates);
+    }
+    const selected = translations[getCurrentLang()] || translations.en;
+    if (message) {
+      message.textContent = selected.profileUpdated;
+    }
+    updateAuthUI();
   });
 };
 
@@ -466,6 +700,8 @@ setActiveNav();
 initLanguageToggle();
 initDisclaimer();
 initLogin();
+initUserMenu();
 initSignupForm();
+initProfileForm();
 initAdminDashboard();
-updateAdminLink();
+updateAuthUI();

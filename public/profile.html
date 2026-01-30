@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin | SVRM</title>
+    <title>Profile | SVRM</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -46,80 +46,50 @@
     </header>
 
     <main>
-      <section class="section">
-        <h1 data-i18n="adminTitle">Administration Console</h1>
-        <p data-i18n="adminSubtitle">Manage users, listings, and editorial content.</p>
-      </section>
-
-      <div id="admin-locked" class="notice hidden" data-i18n="adminLocked">
-        You must be logged in as an admin to access this page.
-      </div>
-
-      <section class="section admin-content" id="admin-overview">
-        <div class="admin-grid">
-          <div class="admin-card">
-            <h3 data-i18n="adminUsers">User Management</h3>
-            <p>
-              <strong data-admin-users>0</strong>
-              <span data-i18n="adminUsersCount">active users</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminReviewUsers">
-              Review Users
-            </button>
-          </div>
-          <div class="admin-card">
-            <h3 data-i18n="adminBlogs">Blog Management</h3>
-            <p>
-              <strong data-admin-blogs>0</strong>
-              <span data-i18n="adminBlogsCount">drafts or posts</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminWriteBlog">Write Blog</button>
-          </div>
-          <div class="admin-card">
-            <h3 data-i18n="adminJobs">Job Postings</h3>
-            <p>
-              <strong data-admin-jobs>0</strong>
-              <span data-i18n="adminJobsCount">open listings</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminPostJob">Post Job</button>
-          </div>
-          <div class="admin-card">
-            <h3 data-i18n="adminServices">Service Listings</h3>
-            <p>
-              <strong data-admin-services>0</strong>
-              <span data-i18n="adminServicesCount">active services</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminAddService">Add Service</button>
-          </div>
-          <div class="admin-card">
-            <h3 data-i18n="adminMentalHealth">Mental Health Profiles</h3>
-            <p>
-              <strong data-admin-mental>0</strong>
-              <span data-i18n="adminMentalCount">providers</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminAddProfile">Add Profile</button>
-          </div>
-          <div class="admin-card">
-            <h3 data-i18n="adminResources">Resource Library</h3>
-            <p>
-              <strong data-admin-resources>0</strong>
-              <span data-i18n="adminResourcesCount">resources</span>
-            </p>
-            <button type="button" class="secondary" data-i18n="adminAddResource">
-              Add Resource
-            </button>
-          </div>
+      <section class="section profile-section">
+        <div class="section-header">
+          <h1 data-i18n="profileTitle">Profile settings</h1>
+          <p class="placeholder" data-i18n="profileSubtitle"></p>
         </div>
-      </section>
 
-      <section class="section admin-content">
-        <h2 data-i18n="adminTranslation">Arabic Translation Editor</h2>
-        <p class="placeholder" data-i18n="adminTranslationHelp"></p>
-        <form id="translation-form">
-          <textarea rows="10"></textarea>
-          <div class="form-actions">
-            <button type="submit" data-i18n="adminSaveTranslations">Save Arabic Translations</button>
+        <div id="profile-locked" class="notice hidden" data-i18n="profileLocked">
+          Please log in to manage your profile.
+        </div>
+
+        <form id="profile-form" class="card">
+          <div class="form-grid">
+            <label>
+              <span data-i18n="signupFirstName">First name</span>
+              <input type="text" name="firstName" />
+            </label>
+            <label>
+              <span data-i18n="signupLastName">Last name</span>
+              <input type="text" name="lastName" />
+            </label>
+            <label class="form-full">
+              <span data-i18n="signupEmail">Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label class="form-full">
+              <span data-i18n="signupState">State</span>
+              <select name="state">
+                <option value="" data-i18n="signupSelectState">Select a state</option>
+              </select>
+            </label>
+            <label class="form-full">
+              <span data-i18n="signupRoleLabel">Select one role</span>
+              <input type="text" name="role" />
+            </label>
+            <label class="form-full">
+              <span data-i18n="signupProfileInfo">Profile info</span>
+              <textarea name="profileInfo" rows="4"></textarea>
+            </label>
           </div>
+          <div class="form-actions">
+            <button type="submit" data-i18n="profileSave">Save changes</button>
+            <button type="button" class="secondary" data-logout data-i18n="logout">Log out</button>
+          </div>
+          <p class="form-message" data-profile-message></p>
         </form>
       </section>
     </main>

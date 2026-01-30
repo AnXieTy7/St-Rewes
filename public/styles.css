@@ -1,11 +1,15 @@
 :root {
   color-scheme: light;
-  --primary: #1f4b6e;
-  --secondary: #f4f6f8;
-  --accent: #d4a54c;
-  --text: #1c2b36;
-  --muted: #5f6b76;
-  --border: #dbe1e7;
+  --primary: #214f7d;
+  --primary-dark: #163a5b;
+  --secondary: #f0f4f8;
+  --accent: #e1b45b;
+  --text: #1b2836;
+  --muted: #5d6a78;
+  --border: #dde5ee;
+  --surface: #ffffff;
+  --shadow: 0 18px 40px rgba(20, 39, 63, 0.12);
+  --radius: 16px;
 }
 
 * {
@@ -14,8 +18,8 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: #fff;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(180deg, #f7f9fc 0%, #ffffff 100%);
   color: var(--text);
 }
 
@@ -30,11 +34,12 @@ a {
 }
 
 header {
+  background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid var(--border);
-  background: #fff;
   position: sticky;
   top: 0;
   z-index: 10;
+  backdrop-filter: blur(12px);
 }
 
 .navbar {
@@ -48,21 +53,30 @@ header {
 }
 
 .logo {
-  font-weight: 700;
-  font-size: 1.4rem;
+  font-weight: 800;
+  font-size: 1.6rem;
   color: var(--primary);
+  letter-spacing: 0.02em;
 }
 
 .nav-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  font-weight: 500;
+  gap: 0.75rem;
+  font-weight: 600;
   color: var(--muted);
 }
 
+.nav-links a {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover,
 .nav-links a.active {
   color: var(--primary);
+  background: rgba(33, 79, 125, 0.08);
 }
 
 .actions {
@@ -82,24 +96,55 @@ select,
 input,
 textarea {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
+  background: var(--surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(33, 79, 125, 0.6);
+  box-shadow: 0 0 0 3px rgba(33, 79, 125, 0.15);
 }
 
 button {
   border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  padding: 0.65rem 1.2rem;
   background: var(--primary);
   color: #fff;
   cursor: pointer;
   font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 20px rgba(33, 79, 125, 0.15);
+}
+
+button:hover {
+  transform: translateY(-1px);
 }
 
 button.secondary {
-  background: #fff;
+  background: var(--surface);
   color: var(--primary);
-  border: 1px solid var(--primary);
+  border: 1px solid rgba(33, 79, 125, 0.4);
+  box-shadow: none;
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(33, 79, 125, 0.25);
+  box-shadow: none;
+}
+
+button.link {
+  background: none;
+  color: var(--primary);
+  padding: 0;
+  box-shadow: none;
 }
 
 main {
@@ -109,22 +154,23 @@ main {
 }
 
 .hero {
-  background: var(--secondary);
-  border-radius: 16px;
-  padding: 2.5rem;
+  background: linear-gradient(135deg, rgba(33, 79, 125, 0.1), rgba(225, 180, 91, 0.15));
+  border-radius: 24px;
+  padding: 3rem;
   display: grid;
   gap: 1.5rem;
+  box-shadow: var(--shadow);
 }
 
 .hero h1 {
-  font-size: 2.2rem;
+  font-size: clamp(2.2rem, 3vw, 3rem);
   margin: 0;
 }
 
 .hero p {
   margin: 0;
   color: var(--muted);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .section {
@@ -135,17 +181,24 @@ main {
   margin-bottom: 0.5rem;
 }
 
+.section-header {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
 .cards {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .card {
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  background: #fff;
+  border: 1px solid rgba(221, 229, 238, 0.8);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(20, 39, 63, 0.08);
 }
 
 .card h3 {
@@ -160,7 +213,7 @@ main {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(13, 24, 38, 0.6);
   display: none;
   align-items: center;
   justify-content: center;
@@ -173,13 +226,14 @@ main {
 }
 
 .modal-content {
-  background: #fff;
-  border-radius: 16px;
+  background: var(--surface);
+  border-radius: 20px;
   max-width: 680px;
   padding: 2rem;
-  width: min(90vw, 680px);
+  width: min(92vw, 680px);
   max-height: 85vh;
   overflow-y: auto;
+  box-shadow: var(--shadow);
 }
 
 .modal-content h2 {
@@ -203,29 +257,79 @@ main {
   flex-wrap: wrap;
 }
 
+.form-message {
+  margin: 0.5rem 0 0;
+  color: #b42318;
+  font-weight: 600;
+}
+
 .notice {
-  background: #fff4e6;
+  background: rgba(255, 244, 230, 0.9);
   border-left: 4px solid var(--accent);
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
   color: #8a5a00;
 }
 
 .admin-grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .admin-card {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  background: #fff;
+  border: 1px solid rgba(221, 229, 238, 0.8);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(20, 39, 63, 0.08);
 }
 
 .admin-card h3 {
   margin-top: 0;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 200px;
+  background: var(--surface);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(20, 39, 63, 0.18);
+  padding: 0.75rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 1px solid rgba(221, 229, 238, 0.8);
+  z-index: 30;
+}
+
+body.rtl .user-dropdown {
+  left: 0;
+  right: auto;
+}
+
+.user-menu.open .user-dropdown {
+  display: flex;
+}
+
+.user-info {
+  padding: 0.5rem 0.75rem;
+  background: var(--secondary);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 footer {
@@ -239,7 +343,7 @@ footer {
   display: none;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
@@ -248,5 +352,6 @@ footer {
   .actions {
     width: 100%;
     justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
