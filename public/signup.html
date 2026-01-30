@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up | SVRM</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <a class="logo" href="/" data-i18n="heroTitle">SVRM</a>
+        <nav class="nav-links">
+          <a href="/" data-home="true" data-i18n="navHome">Home</a>
+          <a href="/about.html" data-i18n="navAbout">About</a>
+          <a href="/jobs.html" data-i18n="navJobs">Jobs</a>
+          <a href="/services.html" data-i18n="navServices">Services</a>
+          <a href="/mental-health.html" data-i18n="navMentalHealth">Mental Health</a>
+          <a href="/blogs.html" data-i18n="navBlogs">Blogs</a>
+          <a href="/courses.html" data-i18n="navCourses">Courses</a>
+          <a href="/resources.html" data-i18n="navResources">Resources</a>
+          <a href="/admin.html" id="admin-link" class="hidden" data-i18n="navAdmin">Admin</a>
+        </nav>
+        <div class="actions">
+          <label for="language-select" class="hidden" data-i18n="languageLabel">Language</label>
+          <select id="language-select" aria-label="Language">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </select>
+          <button type="button" data-login-open data-i18n="login">Login</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <h1 data-i18n="signupTitle">Create your SVRM account</h1>
+        <p data-i18n="signupSubtitle">Join the directory and connect with resources.</p>
+        <form id="signup-form">
+          <div class="form-grid">
+            <label>
+              <span data-i18n="signupEmail">Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              <span data-i18n="signupFirstName">First name</span>
+              <input type="text" name="firstName" required />
+            </label>
+            <label>
+              <span data-i18n="signupLastName">Last name</span>
+              <input type="text" name="lastName" required />
+            </label>
+            <label class="form-full">
+              <span data-i18n="signupProfileInfo">Profile info</span>
+              <textarea
+                name="profileInfo"
+                rows="4"
+                data-i18n-placeholder="signupProfilePlaceholder"
+                placeholder="Share a short bio"
+              ></textarea>
+            </label>
+            <label>
+              <span data-i18n="signupPassword">Password</span>
+              <input type="password" name="password" required />
+            </label>
+            <label>
+              <span data-i18n="signupConfirmPassword">Confirm password</span>
+              <input type="password" name="confirmPassword" required />
+            </label>
+            <label>
+              <span data-i18n="signupState">State</span>
+              <select id="state" name="state" required>
+                <option value="" data-i18n="signupSelectState">Select a state</option>
+              </select>
+            </label>
+            <div class="form-full">
+              <p data-i18n="signupRoleLabel">Select one role</p>
+              <label>
+                <input type="radio" name="role" value="jobSeeker" required />
+                <span data-i18n="signupJobSeeker">Job seeker</span>
+              </label>
+              <label>
+                <input type="radio" name="role" value="businessOwner" required />
+                <span data-i18n="signupBusinessOwner">Business owner</span>
+              </label>
+            </div>
+            <label class="form-full">
+              <input type="checkbox" name="providesService" />
+              <span data-i18n="signupServiceToggle">I provide a service</span>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" data-i18n="signupSubmit">Create account</button>
+            <p id="signup-message" class="placeholder"></p>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p data-i18n="footerText">SVRM Directory</p>
+    </footer>
+
+    <div class="modal" id="login-modal" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <h2 data-i18n="loginTitle">Member Login</h2>
+        <form>
+          <div class="form-grid">
+            <label class="form-full">
+              <span data-i18n="loginEmail">Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label class="form-full">
+              <span data-i18n="loginPassword">Password</span>
+              <input type="password" name="password" required />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" data-i18n="loginAction">Sign in</button>
+            <button type="button" class="secondary" data-login-close data-i18n="close">
+              Close
+            </button>
+          </div>
+          <p>
+            <span data-i18n="loginSignupPrompt">New to the website?</span>
+            <a href="/signup.html" data-i18n="loginSignupAction">Sign up now</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
