@@ -97,7 +97,47 @@ const baseTranslations = {
     adminTranslation: 'Arabic Translation Editor',
     adminTranslationHelp:
       'Adjust Arabic translations below and save to update the on-site language pack.',
-    adminSaveTranslations: 'Save Arabic Translations',
+    adminTranslationCta: 'Open Translation Editor',
+    adminManagementTitle: 'Content Management',
+    adminManagementHelp: 'Create and review directory records in real time.',
+    adminTableEmail: 'Email',
+    adminTableName: 'Name',
+    adminTableRole: 'Role',
+    adminTableState: 'State',
+    adminTableAdmin: 'Admin',
+    adminTableTitle: 'Title',
+    adminTableStatus: 'Status',
+    adminTableActions: 'Actions',
+    adminTableProvider: 'Provider',
+    adminTableLicense: 'License',
+    adminTableType: 'Type',
+    adminPlaceholderTitle: 'Title',
+    adminPlaceholderAuthor: 'Author',
+    adminPlaceholderContent: 'Content',
+    adminPlaceholderProvider: 'Provider',
+    adminPlaceholderLocation: 'Location',
+    adminPlaceholderDescription: 'Description',
+    adminPlaceholderService: 'Service name',
+    adminPlaceholderContact: 'Contact info',
+    adminPlaceholderName: 'Name',
+    adminPlaceholderLicense: 'License',
+    adminPlaceholderSpecialty: 'Specialty',
+    adminPlaceholderBio: 'Bio',
+    adminPlaceholderType: 'Type',
+    adminPlaceholderLink: 'Link',
+    adminCreateBlog: 'Create Blog',
+    adminCreateJob: 'Create Job',
+    adminCreateService: 'Create Service',
+    adminCreateProfile: 'Create Profile',
+    adminCreateResource: 'Create Resource',
+    adminDelete: 'Delete',
+    adminSave: 'Save',
+    translationEditorTitle: 'Arabic Translation Corrections',
+    translationEditorSubtitle:
+      'Review each English label and adjust the Arabic translation, then save instantly.',
+    translationTableEnglish: 'English',
+    translationTableArabic: 'Arabic',
+    translationTableActions: 'Actions',
     adminLocked: 'You must be logged in as an admin to access this page.',
   },
   ar: {
@@ -197,7 +237,47 @@ const baseTranslations = {
     adminAddResource: 'إضافة مورد',
     adminTranslation: 'محرر الترجمة العربية',
     adminTranslationHelp: 'قم بتعديل الترجمات العربية أدناه واحفظها لتحديث حزمة اللغة.',
-    adminSaveTranslations: 'حفظ الترجمات العربية',
+    adminTranslationCta: 'افتح محرر الترجمة',
+    adminManagementTitle: 'إدارة المحتوى',
+    adminManagementHelp: 'أنشئ وراجع سجلات الدليل مباشرة.',
+    adminTableEmail: 'البريد الإلكتروني',
+    adminTableName: 'الاسم',
+    adminTableRole: 'الدور',
+    adminTableState: 'الولاية',
+    adminTableAdmin: 'مسؤول',
+    adminTableTitle: 'العنوان',
+    adminTableStatus: 'الحالة',
+    adminTableActions: 'الإجراءات',
+    adminTableProvider: 'المُقدّم',
+    adminTableLicense: 'الترخيص',
+    adminTableType: 'النوع',
+    adminPlaceholderTitle: 'العنوان',
+    adminPlaceholderAuthor: 'الكاتب',
+    adminPlaceholderContent: 'المحتوى',
+    adminPlaceholderProvider: 'المُقدّم',
+    adminPlaceholderLocation: 'الموقع',
+    adminPlaceholderDescription: 'الوصف',
+    adminPlaceholderService: 'اسم الخدمة',
+    adminPlaceholderContact: 'معلومات التواصل',
+    adminPlaceholderName: 'الاسم',
+    adminPlaceholderLicense: 'الترخيص',
+    adminPlaceholderSpecialty: 'التخصص',
+    adminPlaceholderBio: 'نبذة',
+    adminPlaceholderType: 'النوع',
+    adminPlaceholderLink: 'الرابط',
+    adminCreateBlog: 'إنشاء مدونة',
+    adminCreateJob: 'إنشاء وظيفة',
+    adminCreateService: 'إنشاء خدمة',
+    adminCreateProfile: 'إنشاء ملف',
+    adminCreateResource: 'إنشاء مورد',
+    adminDelete: 'حذف',
+    adminSave: 'حفظ',
+    translationEditorTitle: 'تصحيح الترجمات العربية',
+    translationEditorSubtitle:
+      'راجع كل عنوان بالإنجليزية وعدّل الترجمة العربية ثم احفظ مباشرة.',
+    translationTableEnglish: 'الإنجليزية',
+    translationTableArabic: 'العربية',
+    translationTableActions: 'الإجراءات',
     adminLocked: 'يجب تسجيل الدخول كمسؤول للوصول إلى هذه الصفحة.',
   },
 };
@@ -255,8 +335,6 @@ const stateList = [
   'Wyoming',
 ];
 
-const ADMIN_EMAIL = 'admin@admin.co';
-const ADMIN_PASSWORD = 'Admin123@';
 const PROFILE_STORAGE_KEY = 'svrm-profiles';
 
 const loadProfiles = () => {
@@ -316,29 +394,25 @@ const moveProfile = (oldEmail, newEmail, updates) => {
   saveProfiles(profiles);
 };
 
-const loadOverrides = () => {
-  const stored = localStorage.getItem('svrm-translation-overrides');
-  if (!stored) {
-    return {};
-  }
+const translations = {
+  en: { ...baseTranslations.en },
+  ar: { ...baseTranslations.ar },
+};
 
+const loadRemoteTranslations = async () => {
   try {
-    return JSON.parse(stored);
+    const response = await fetch('/api/translations');
+    if (!response.ok) {
+      return;
+    }
+    const data = await response.json();
+    if (data?.ar) {
+      translations.ar = { ...translations.ar, ...data.ar };
+    }
   } catch (error) {
-    return {};
+    // Ignore translation fetch errors and fall back to base translations.
   }
 };
-
-const mergeTranslations = () => {
-  const overrides = loadOverrides();
-  const merged = {
-    en: { ...baseTranslations.en, ...(overrides.en || {}) },
-    ar: { ...baseTranslations.ar, ...(overrides.ar || {}) },
-  };
-  return merged;
-};
-
-const translations = mergeTranslations();
 
 const getCurrentLang = () => localStorage.getItem('svrm-lang') || 'en';
 
@@ -421,7 +495,7 @@ const initLogin = () => {
     modal.classList.remove('active');
   });
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(form);
     const emailInput = String(formData.get('email') || '').trim();
@@ -439,23 +513,36 @@ const initLogin = () => {
     }
 
     const email = emailInput.toLowerCase();
-    const isAdminEmail = email === ADMIN_EMAIL;
-    if (isAdminEmail && password !== ADMIN_PASSWORD) {
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        if (message) {
+          message.textContent = result.message || selected.loginErrorAdmin;
+        }
+        return;
+      }
+      localStorage.setItem('svrm-user', result.email || email);
+      localStorage.setItem('svrm-admin', result.isAdmin ? 'true' : 'false');
+      setProfile(result.email || email, {
+        email: result.email || email,
+        firstName: result.firstName || '',
+        lastName: result.lastName || '',
+        state: result.state || '',
+        profileInfo: result.profileInfo || '',
+        role: result.role || (result.isAdmin ? 'Administrator' : 'Member'),
+      });
+      modal.classList.remove('active');
+      updateAuthUI();
+    } catch (error) {
       if (message) {
         message.textContent = selected.loginErrorAdmin;
       }
-      return;
     }
-
-    const isAdmin = isAdminEmail && password === ADMIN_PASSWORD;
-    localStorage.setItem('svrm-user', email);
-    localStorage.setItem('svrm-admin', isAdmin ? 'true' : 'false');
-    setProfile(email, {
-      email,
-      role: isAdmin ? 'Administrator' : 'Member',
-    });
-    modal.classList.remove('active');
-    updateAuthUI();
   });
 };
 
@@ -673,35 +760,268 @@ const initAdminDashboard = () => {
         element.textContent = '—';
       });
     });
+};
 
-  const translationForm = document.querySelector('#translation-form');
-  if (!translationForm) {
+const initAdminManagement = () => {
+  const management = document.querySelector('#admin-management');
+  if (!management) {
     return;
   }
+  const isAdmin = localStorage.getItem('svrm-admin') === 'true';
+  if (!isAdmin) {
+    return;
+  }
+  const selected = translations[getCurrentLang()] || translations.en;
 
-  const textarea = translationForm.querySelector('textarea');
-  textarea.value = JSON.stringify(translations.ar, null, 2);
+  const rowRenderers = {
+    users: (user) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${user.email || ''}</td>
+        <td>${[user.firstName, user.lastName].filter(Boolean).join(' ')}</td>
+        <td>${user.role || ''}</td>
+        <td>${user.state || ''}</td>
+        <td>${user.isAdmin ? 'Yes' : 'No'}</td>
+      `;
+      return row;
+    },
+    blogs: (blog) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${blog.title || ''}</td>
+        <td>${blog.status || ''}</td>
+        <td><button type="button" class="secondary" data-delete="blogs" data-id="${blog._id}">
+          ${selected.adminDelete}
+        </button></td>
+      `;
+      return row;
+    },
+    jobs: (job) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${job.title || ''}</td>
+        <td>${job.provider || ''}</td>
+        <td>${job.status || ''}</td>
+        <td><button type="button" class="secondary" data-delete="jobs" data-id="${job._id}">
+          ${selected.adminDelete}
+        </button></td>
+      `;
+      return row;
+    },
+    services: (service) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${service.name || ''}</td>
+        <td>${service.provider || ''}</td>
+        <td>${service.status || ''}</td>
+        <td><button type="button" class="secondary" data-delete="services" data-id="${service._id}">
+          ${selected.adminDelete}
+        </button></td>
+      `;
+      return row;
+    },
+    'mental-health': (profile) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${profile.name || ''}</td>
+        <td>${profile.license || ''}</td>
+        <td>${profile.status || ''}</td>
+        <td><button type="button" class="secondary" data-delete="mental-health" data-id="${profile._id}">
+          ${selected.adminDelete}
+        </button></td>
+      `;
+      return row;
+    },
+    resources: (resource) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${resource.title || ''}</td>
+        <td>${resource.type || ''}</td>
+        <td>${resource.status || ''}</td>
+        <td><button type="button" class="secondary" data-delete="resources" data-id="${resource._id}">
+          ${selected.adminDelete}
+        </button></td>
+      `;
+      return row;
+    },
+  };
 
-  translationForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    try {
-      const updates = JSON.parse(textarea.value);
-      const overrides = loadOverrides();
-      const nextOverrides = { ...overrides, ar: updates };
-      localStorage.setItem('svrm-translation-overrides', JSON.stringify(nextOverrides));
-      alert('Arabic translations saved locally.');
-    } catch (error) {
-      alert('Please provide valid JSON for the Arabic translations.');
+  const loadTable = async (type, url, rowRenderer) => {
+    const tableBody = document.querySelector(`[data-admin-table="${type}"]`);
+    if (!tableBody) {
+      return;
     }
+    tableBody.innerHTML = '';
+    try {
+      const response = await fetch(url);
+      const items = await response.json();
+      items.forEach((item) => {
+        const row = rowRenderer(item);
+        tableBody.appendChild(row);
+      });
+    } catch (error) {
+      const row = document.createElement('tr');
+      const cell = document.createElement('td');
+      const headerCells = tableBody.closest('table')?.querySelectorAll('th') || [];
+      cell.colSpan = headerCells.length || 1;
+      cell.textContent = 'Unable to load data.';
+      row.appendChild(cell);
+      tableBody.appendChild(row);
+    }
+  };
+
+  const deleteItem = async (type, id) => {
+    await fetch(`/api/admin/${type}/${id}`, { method: 'DELETE' });
+  };
+
+  Object.entries({
+    users: '/api/admin/users',
+    blogs: '/api/admin/blogs',
+    jobs: '/api/admin/jobs',
+    services: '/api/admin/services',
+    'mental-health': '/api/admin/mental-health',
+    resources: '/api/admin/resources',
+  }).forEach(([type, url]) => {
+    loadTable(type, url, rowRenderers[type]);
+  });
+
+  management.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-delete]');
+    if (!button) {
+      return;
+    }
+    const type = button.dataset.delete;
+    const id = button.dataset.id;
+    if (!type || !id) {
+      return;
+    }
+    await deleteItem(type, id);
+    const url = type === 'mental-health' ? '/api/admin/mental-health' : `/api/admin/${type}`;
+    loadTable(type, url, rowRenderers[type]);
+  });
+
+  document.querySelectorAll('[data-admin-form]').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      const type = form.dataset.adminForm;
+      const message = form.querySelector(`[data-admin-message="${type}"]`);
+      if (message) {
+        message.textContent = '';
+      }
+      try {
+        const response = await fetch(`/api/admin/${type}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          if (message) {
+            message.textContent = result.message || 'Unable to save entry.';
+          }
+          return;
+        }
+        form.reset();
+        if (message) {
+          message.textContent = 'Saved successfully.';
+        }
+        const url =
+          type === 'mental-health' ? '/api/admin/mental-health' : `/api/admin/${type}`;
+        loadTable(type, url, rowRenderers[type]);
+      } catch (error) {
+        if (message) {
+          message.textContent = 'Unable to save entry.';
+        }
+      }
+    });
   });
 };
 
-setActiveNav();
-initLanguageToggle();
-initDisclaimer();
-initLogin();
-initUserMenu();
-initSignupForm();
-initProfileForm();
-initAdminDashboard();
-updateAuthUI();
+const initTranslationEditor = () => {
+  const tableBody = document.querySelector('[data-translation-rows]');
+  if (!tableBody) {
+    return;
+  }
+  const isAdmin = localStorage.getItem('svrm-admin') === 'true';
+  const selected = translations[getCurrentLang()] || translations.en;
+  const lockedNotice = document.querySelector('#translation-locked');
+  document.querySelectorAll('.admin-content').forEach((section) => {
+    section.classList.toggle('hidden', !isAdmin);
+  });
+  if (lockedNotice) {
+    lockedNotice.classList.toggle('hidden', isAdmin);
+  }
+  if (!isAdmin) {
+    return;
+  }
+
+  const buildRows = async () => {
+    tableBody.innerHTML = '';
+    let overrides = {};
+    try {
+      const response = await fetch('/api/admin/translations');
+      const data = await response.json();
+      overrides = data.ar || {};
+    } catch (error) {
+      overrides = {};
+    }
+
+    Object.entries(baseTranslations.en).forEach(([key, english]) => {
+      const row = document.createElement('tr');
+      const currentArabic = overrides[key] || baseTranslations.ar[key] || '';
+      row.innerHTML = `
+        <td>${english}</td>
+        <td>
+          <textarea class="translation-input" data-translation-key="${key}">${currentArabic}</textarea>
+        </td>
+        <td>
+          <button type="button" class="secondary" data-translation-save="${key}">
+            ${selected.adminSave}
+          </button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+  };
+
+  tableBody.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-translation-save]');
+    if (!button) {
+      return;
+    }
+    const key = button.dataset.translationSave;
+    const textarea = tableBody.querySelector(`[data-translation-key="${key}"]`);
+    if (!textarea) {
+      return;
+    }
+    const value = textarea.value;
+    await fetch(`/api/admin/translations/${key}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ value }),
+    });
+    translations.ar[key] = value;
+    applyTranslations(getCurrentLang());
+  });
+
+  buildRows();
+};
+
+const initApp = async () => {
+  await loadRemoteTranslations();
+  setActiveNav();
+  initLanguageToggle();
+  initDisclaimer();
+  initLogin();
+  initUserMenu();
+  initSignupForm();
+  initProfileForm();
+  initAdminDashboard();
+  initAdminManagement();
+  initTranslationEditor();
+  updateAuthUI();
+};
+
+initApp();

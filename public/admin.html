@@ -115,12 +115,181 @@
       <section class="section admin-content">
         <h2 data-i18n="adminTranslation">Arabic Translation Editor</h2>
         <p class="placeholder" data-i18n="adminTranslationHelp"></p>
-        <form id="translation-form">
-          <textarea rows="10"></textarea>
-          <div class="form-actions">
-            <button type="submit" data-i18n="adminSaveTranslations">Save Arabic Translations</button>
-          </div>
-        </form>
+        <div class="form-actions">
+          <a class="button-link" href="/translation-editor.html" data-i18n="adminTranslationCta">
+            Open Translation Editor
+          </a>
+        </div>
+      </section>
+
+      <section class="section admin-content" id="admin-management">
+        <h2 data-i18n="adminManagementTitle">Content Management</h2>
+        <p class="placeholder" data-i18n="adminManagementHelp">
+          Create and review directory records in real time.
+        </p>
+        <div class="admin-management-grid">
+          <details class="admin-panel" open>
+            <summary data-i18n="adminUsers">User Management</summary>
+            <div class="admin-panel-body">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableEmail">Email</th>
+                    <th data-i18n="adminTableName">Name</th>
+                    <th data-i18n="adminTableRole">Role</th>
+                    <th data-i18n="adminTableState">State</th>
+                    <th data-i18n="adminTableAdmin">Admin</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="users"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="admin-panel">
+            <summary data-i18n="adminBlogs">Blog Management</summary>
+            <div class="admin-panel-body">
+              <form class="admin-form" data-admin-form="blogs">
+                <input type="text" name="title" placeholder="Title" required data-i18n-placeholder="adminPlaceholderTitle" />
+                <input type="text" name="author" placeholder="Author" required data-i18n-placeholder="adminPlaceholderAuthor" />
+                <textarea name="content" rows="3" placeholder="Content" data-i18n-placeholder="adminPlaceholderContent" required></textarea>
+                <select name="status">
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                </select>
+                <button type="submit" data-i18n="adminCreateBlog">Create Blog</button>
+                <span class="form-message" data-admin-message="blogs"></span>
+              </form>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableTitle">Title</th>
+                    <th data-i18n="adminTableStatus">Status</th>
+                    <th data-i18n="adminTableActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="blogs"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="admin-panel">
+            <summary data-i18n="adminJobs">Job Postings</summary>
+            <div class="admin-panel-body">
+              <form class="admin-form" data-admin-form="jobs">
+                <input type="text" name="title" placeholder="Title" required data-i18n-placeholder="adminPlaceholderTitle" />
+                <input type="text" name="provider" placeholder="Provider" required data-i18n-placeholder="adminPlaceholderProvider" />
+                <input type="text" name="location" placeholder="Location" data-i18n-placeholder="adminPlaceholderLocation" />
+                <textarea name="description" rows="3" placeholder="Description" data-i18n-placeholder="adminPlaceholderDescription"></textarea>
+                <select name="status">
+                  <option value="open">Open</option>
+                  <option value="closed">Closed</option>
+                </select>
+                <button type="submit" data-i18n="adminCreateJob">Create Job</button>
+                <span class="form-message" data-admin-message="jobs"></span>
+              </form>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableTitle">Title</th>
+                    <th data-i18n="adminTableProvider">Provider</th>
+                    <th data-i18n="adminTableStatus">Status</th>
+                    <th data-i18n="adminTableActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="jobs"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="admin-panel">
+            <summary data-i18n="adminServices">Service Listings</summary>
+            <div class="admin-panel-body">
+              <form class="admin-form" data-admin-form="services">
+                <input type="text" name="name" placeholder="Service name" required data-i18n-placeholder="adminPlaceholderService" />
+                <input type="text" name="provider" placeholder="Provider" required data-i18n-placeholder="adminPlaceholderProvider" />
+                <input type="text" name="contactInfo" placeholder="Contact info" data-i18n-placeholder="adminPlaceholderContact" />
+                <textarea name="description" rows="3" placeholder="Description" data-i18n-placeholder="adminPlaceholderDescription"></textarea>
+                <select name="status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                <button type="submit" data-i18n="adminCreateService">Create Service</button>
+                <span class="form-message" data-admin-message="services"></span>
+              </form>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableName">Name</th>
+                    <th data-i18n="adminTableProvider">Provider</th>
+                    <th data-i18n="adminTableStatus">Status</th>
+                    <th data-i18n="adminTableActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="services"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="admin-panel">
+            <summary data-i18n="adminMentalHealth">Mental Health Profiles</summary>
+            <div class="admin-panel-body">
+              <form class="admin-form" data-admin-form="mental-health">
+                <input type="text" name="name" placeholder="Name" required data-i18n-placeholder="adminPlaceholderName" />
+                <input type="text" name="license" placeholder="License" required data-i18n-placeholder="adminPlaceholderLicense" />
+                <input type="text" name="specialty" placeholder="Specialty" data-i18n-placeholder="adminPlaceholderSpecialty" />
+                <input type="text" name="location" placeholder="Location" data-i18n-placeholder="adminPlaceholderLocation" />
+                <textarea name="bio" rows="3" placeholder="Bio" data-i18n-placeholder="adminPlaceholderBio"></textarea>
+                <select name="status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                <button type="submit" data-i18n="adminCreateProfile">Create Profile</button>
+                <span class="form-message" data-admin-message="mental-health"></span>
+              </form>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableName">Name</th>
+                    <th data-i18n="adminTableLicense">License</th>
+                    <th data-i18n="adminTableStatus">Status</th>
+                    <th data-i18n="adminTableActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="mental-health"></tbody>
+              </table>
+            </div>
+          </details>
+
+          <details class="admin-panel">
+            <summary data-i18n="adminResources">Resource Library</summary>
+            <div class="admin-panel-body">
+              <form class="admin-form" data-admin-form="resources">
+                <input type="text" name="title" placeholder="Title" required data-i18n-placeholder="adminPlaceholderTitle" />
+                <input type="text" name="type" placeholder="Type" data-i18n-placeholder="adminPlaceholderType" />
+                <input type="url" name="link" placeholder="Link" data-i18n-placeholder="adminPlaceholderLink" />
+                <textarea name="description" rows="3" placeholder="Description" data-i18n-placeholder="adminPlaceholderDescription"></textarea>
+                <select name="status">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                <button type="submit" data-i18n="adminCreateResource">Create Resource</button>
+                <span class="form-message" data-admin-message="resources"></span>
+              </form>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="adminTableTitle">Title</th>
+                    <th data-i18n="adminTableType">Type</th>
+                    <th data-i18n="adminTableStatus">Status</th>
+                    <th data-i18n="adminTableActions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-admin-table="resources"></tbody>
+              </table>
+            </div>
+          </details>
+        </div>
       </section>
     </main>
 

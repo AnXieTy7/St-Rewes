@@ -147,6 +147,18 @@ button.link {
   box-shadow: none;
 }
 
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0.65rem 1.2rem;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(33, 79, 125, 0.15);
+}
+
 main {
   max-width: 1200px;
   margin: 0 auto;
@@ -287,6 +299,103 @@ main {
 
 .admin-card h3 {
   margin-top: 0;
+}
+
+.admin-management-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-panel {
+  border: 1px solid rgba(221, 229, 238, 0.8);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem 1.5rem;
+  background: var(--surface);
+  box-shadow: 0 12px 30px rgba(20, 39, 63, 0.08);
+}
+
+.admin-panel summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.admin-panel-body {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-form {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: start;
+}
+
+.admin-form textarea {
+  grid-column: 1 / -1;
+}
+
+.admin-form .form-message {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0.5rem;
+}
+
+body.rtl .admin-table th,
+body.rtl .admin-table td {
+  text-align: right;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(33, 79, 125, 0.04);
+}
+
+.admin-table button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  box-shadow: none;
+}
+
+.translation-table-wrapper {
+  overflow-x: auto;
+}
+
+.translation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.translation-table th,
+.translation-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0.5rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+body.rtl .translation-table th,
+body.rtl .translation-table td {
+  text-align: right;
+}
+
+.translation-input {
+  width: 100%;
+  min-height: 72px;
 }
 
 .user-menu {
