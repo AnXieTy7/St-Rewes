@@ -27,7 +27,20 @@
             <option value="en">English</option>
             <option value="ar">العربية</option>
           </select>
-          <button type="button" data-login-open data-i18n="login">Login</button>
+          <button type="button" class="ghost" data-login-open data-i18n="login">Login</button>
+          <div class="user-menu hidden" data-user-menu>
+            <button type="button" class="ghost" data-user-menu-toggle>
+              <span data-user-label data-i18n="profile">Profile</span>
+              <span class="chevron" aria-hidden="true">▾</span>
+            </button>
+            <div class="user-dropdown">
+              <div class="user-info">
+                <span class="user-email" data-user-email></span>
+              </div>
+              <a href="/profile.html" data-i18n="profileSettings">Profile settings</a>
+              <button type="button" class="link" data-logout data-i18n="logout">Log out</button>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -93,6 +106,7 @@
               <input type="password" name="password" required />
             </label>
           </div>
+          <p class="form-message" data-login-message></p>
           <div class="form-actions">
             <button type="submit" data-i18n="loginAction">Sign in</button>
             <button type="button" class="secondary" data-login-close data-i18n="close">
